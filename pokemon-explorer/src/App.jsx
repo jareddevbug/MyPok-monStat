@@ -7,12 +7,13 @@ function App() {
   const [pokemonDetails, setPokemonDetails] = useState(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedPokemon, setSelectedPokemon] = useState('');
+  const [filteredSuggestions, setFilteredSuggestions] = useState([]);
 
-  // Fetch a list of Pokémon
+  // Fetch a list of Pokémon names
   useEffect(() => {
     async function loadPokemonList() {
       try {
-        const response = await fetch('https://pokeapi.co/api/v2/pokemon?limit=100');
+        const response = await fetch('https://pokeapi.co/api/v2/pokemon?limit=1000'); // Fetch a large number for suggestions
         const data = await response.json();
         setPokemonList(data.results);
       } catch (error) {
@@ -37,6 +38,25 @@ function App() {
     fetchPokemonDetails();
   }, [selectedPokemon]);
 
+  // Handle search input and filter suggestions
+  const handleSearchInput = (e) => {
+    const query = e.target.value.toLowerCase();
+    setSearchQuery(query);
+    
+    // Filter Pokémon names based on search input
+    const filtered = pokemonList.filter(pokemon =>
+      pokemon.name.toLowerCase().includes(query)
+    );
+    setFilteredSuggestions(filtered);
+  };
+
+  // Handle the selection of a suggestion
+  const handleSuggestionClick = (pokemonName) => {
+    setSearchQuery(pokemonName);
+    setSelectedPokemon(pokemonName);
+    setFilteredSuggestions([]); // Clear suggestions
+  };
+
   const handleSearch = () => {
     setSelectedPokemon(searchQuery.toLowerCase());
   };
@@ -55,14 +75,29 @@ function App() {
               className="form-control form-control-lg"
               placeholder="Enter Pokémon name or ID"
               value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
+              onChange={handleSearchInput}
             />
             <button id="searchBtn" className="btn btn-primary btn-lg" onClick={handleSearch}>
               Search
             </button>
           </div>
+          {/* Suggestions List */}
+          {filteredSuggestions.length > 0 && (
+            <ul className="list-group">
+              {filteredSuggestions.map((pokemon, index) => (
+                <li
+                  key={index}
+                  className="list-group-item list-group-item-action"
+                  onClick={() => handleSuggestionClick(pokemon.name)}
+                >
+                  {pokemon.name.charAt(0).toUpperCase() + pokemon.name.slice(1)}
+                </li>
+              ))}
+            </ul>
+          )}
         </div>
       </div>
+
       {/* Dropdown for Pokémon Selection */}
       <div className="row justify-content-center mb-4">
         <div className="col-md-6">
@@ -86,17 +121,22 @@ function App() {
       {pokemonDetails && (
         <div className="pokemon-card">
           <div className="pokemon-image-container">
-          <img
+             <img
+              src={pokemonDetails.sprites.other['showdown'].front_default}
+              alt={pokemonDetails.name}
+              className="pokemon-image"
+            />
+             <img
               src={pokemonDetails.sprites.other['home'].front_default}
               alt={pokemonDetails.name}
               className="pokemon-image"
             />
-            <hr/>
-          <img
+             <img
               src={pokemonDetails.sprites.other['official-artwork'].front_default}
               alt={pokemonDetails.name}
               className="pokemon-image"
             />
+             
           </div>
           <div className="pokemon-info">
             <div className="info-tile">
