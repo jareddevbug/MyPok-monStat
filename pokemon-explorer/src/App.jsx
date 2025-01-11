@@ -61,6 +61,11 @@ function App() {
     setSelectedPokemon(searchQuery.toLowerCase());
   };
 
+  // Function to calculate progress bar width
+  const getStatProgress = (statValue) => {
+    return (statValue / 255) * 100; // Normalize stat value to percentage (assuming stats range from 0 to 255)
+  };
+
   return (
     <div className="container py-5">
       <h1 className="text-center mb-4 fw-bold text-primary">Pokémon Explorer</h1>
@@ -121,22 +126,21 @@ function App() {
       {pokemonDetails && (
         <div className="pokemon-card">
           <div className="pokemon-image-container">
-             <img
+          <img
               src={pokemonDetails.sprites.other['showdown'].front_default}
               alt={pokemonDetails.name}
               className="pokemon-image"
             />
-             <img
+            <img
               src={pokemonDetails.sprites.other['home'].front_default}
               alt={pokemonDetails.name}
               className="pokemon-image"
             />
-             <img
+            <img
               src={pokemonDetails.sprites.other['official-artwork'].front_default}
               alt={pokemonDetails.name}
               className="pokemon-image"
             />
-             
           </div>
           <div className="pokemon-info">
             <div className="info-tile">
@@ -158,8 +162,20 @@ function App() {
             <div className="info-tile">
               <h4>Stats</h4>
               {pokemonDetails.stats.map((stat) => (
-                <div key={stat.stat.name}>
-                  <strong>{stat.stat.name}:</strong> {stat.base_stat}
+                <div key={stat.stat.name} className="mb-3">
+                  <label htmlFor={stat.stat.name} className="form-label">{stat.stat.name.toUpperCase()}</label>
+                  <div className="progress">
+                    <div
+                      className="progress-bar"
+                      role="progressbar"
+                      style={{ width: `${getStatProgress(stat.base_stat)}%` }}
+                      aria-valuenow={stat.base_stat}
+                      aria-valuemin="0"
+                      aria-valuemax="255"
+                    >
+                      {stat.base_stat}
+                    </div>
+                  </div>
                 </div>
               ))}
             </div>
