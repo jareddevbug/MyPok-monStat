@@ -63,7 +63,7 @@ function App() {
 
   // Function to calculate progress bar width
   const getStatProgress = (statValue) => {
-    return (statValue / 255) * 100; // Normalize stat value to percentage (assuming stats range from 0 to 255)
+    return (statValue / 100) * 100; // Normalize stat value to percentage (assuming stats range from 0 to 255)
   };
 
   return (
@@ -126,18 +126,28 @@ function App() {
       {pokemonDetails && (
         <div className="pokemon-card">
           <div className="pokemon-image-container">
-          <img
+          {/* <img
               src={pokemonDetails.sprites.other['showdown'].front_default}
               alt={pokemonDetails.name}
               className="pokemon-image"
-            />
+            /> */}
             <img
               src={pokemonDetails.sprites.other['home'].front_default}
               alt={pokemonDetails.name}
               className="pokemon-image"
             />
+             <img
+              src={pokemonDetails.sprites.other['home'].front_shiny}
+              alt={pokemonDetails.name}
+              className="pokemon-image"
+            />
             <img
               src={pokemonDetails.sprites.other['official-artwork'].front_default}
+              alt={pokemonDetails.name}
+              className="pokemon-image"
+            />
+             <img
+              src={pokemonDetails.sprites.other['official-artwork'].front_shiny}
               alt={pokemonDetails.name}
               className="pokemon-image"
             />
