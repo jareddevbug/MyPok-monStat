@@ -9,11 +9,10 @@ function App() {
   const [selectedPokemon, setSelectedPokemon] = useState('');
   const [filteredSuggestions, setFilteredSuggestions] = useState([]);
 
-  // Fetch a list of Pokémon names
   useEffect(() => {
     async function loadPokemonList() {
       try {
-        const response = await fetch('https://pokeapi.co/api/v2/pokemon?limit=1000'); // Fetch a large number for suggestions
+        const response = await fetch('https://pokeapi.co/api/v2/pokemon?limit=1000'); 
         const data = await response.json();
         setPokemonList(data.results);
       } catch (error) {
@@ -23,7 +22,6 @@ function App() {
     loadPokemonList();
   }, []);
 
-  // Fetch the selected Pokémon details
   useEffect(() => {
     if (!selectedPokemon) return;
     async function fetchPokemonDetails() {
@@ -38,37 +36,33 @@ function App() {
     fetchPokemonDetails();
   }, [selectedPokemon]);
 
-  // Handle search input and filter suggestions
   const handleSearchInput = (e) => {
     const query = e.target.value.toLowerCase();
     setSearchQuery(query);
     
-    // Filter Pokémon names based on search input
     const filtered = pokemonList.filter(pokemon =>
       pokemon.name.toLowerCase().includes(query)
     );
     setFilteredSuggestions(filtered);
   };
 
-  // Handle the selection of a suggestion
   const handleSuggestionClick = (pokemonName) => {
     setSearchQuery(pokemonName);
     setSelectedPokemon(pokemonName);
-    setFilteredSuggestions([]); // Clear suggestions
+    setFilteredSuggestions([]); 
   };
 
   const handleSearch = () => {
     setSelectedPokemon(searchQuery.toLowerCase());
   };
 
-  // Function to calculate progress bar width
   const getStatProgress = (statValue) => {
-    return (statValue / 100) * 100; // Normalize stat value to percentage (assuming stats range from 0 to 255)
+    return (statValue / 255) * 100; 
   };
 
   return (
     <div className="container py-5">
-      <h1 className="text-center mb-4 fw-bold text-primary">Pokémon Explorer</h1>
+      <h1 className="text-center mb-4 fw-bold text-default">Find Pokemons</h1>
 
       {/* Search Bar */}
       <div className="row justify-content-center mb-4">
@@ -105,6 +99,7 @@ function App() {
 
       {/* Dropdown for Pokémon Selection */}
       <div className="row justify-content-center mb-4">
+      <h2 className="text-center mb-4 fw-bold text-default"> Or Select a Pokemon</h2>
         <div className="col-md-6">
           <select
             id="pokemonDropdown"
@@ -155,7 +150,7 @@ function App() {
           <div className="pokemon-info">
             <div className="info-tile">
               <h3>{pokemonDetails.name.charAt(0).toUpperCase() + pokemonDetails.name.slice(1)}</h3>
-              <p><strong>ID:</strong> {pokemonDetails.id}</p>
+              {/* <p><strong>ID:</strong> {pokemonDetails.id}</p> */}
             </div>
             <div className="info-tile">
               <h4>Types</h4>
@@ -166,8 +161,8 @@ function App() {
               ))}
             </div>
             <div className="info-tile">
-              <p><strong>Height:</strong> {pokemonDetails.height} decimetres</p>
-              <p><strong>Weight:</strong> {pokemonDetails.weight} hectograms</p>
+              <p><strong>Height:</strong> {pokemonDetails.height} Inches</p>
+              <p><strong>Weight:</strong> {pokemonDetails.weight} Kilograms</p>
             </div>
             <div className="info-tile">
               <h4>Stats</h4>
